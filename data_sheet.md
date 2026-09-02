@@ -5,6 +5,19 @@ This datasheet describes the full suite of **Functions 1 through 8**, which simu
 
 The dimensionality of the inputs scales across the portfolio, ranging from `2D` up to `8D` arrays. In all cases, the initial dataset provided a sparse uniform seed of observations, and the output represents a `1D` scalar score where the universal objective is **maximization** (often achieved by maximizing the negative of a cost or side-effect).
 
+Inital data points were provided as following:
+| Functions  | dim | points |
+|---|-----|----------------|
+| F1 | 2 | 10 |
+| F2 | 2 | 10 |
+| F3 | 3 | 15 |
+| F4 | 4 | 30 |
+| F5 | 4 | 20 |
+| F6 | 5 | 20 |
+| F7 | 6 | 30 |
+| F8 | 8 | 40 |
+
+
 ## Nature of the Data
 The input structures consist of `N x D` arrays of coordinates strictly confined within a `[0, 1]` hypercube, returning a `1D` array of scalar performance scores. 
 
