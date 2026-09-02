@@ -33,7 +33,7 @@ To ensure the solver did not get trapped in high-dimensional saddle points, anal
 
 ## Performance and Results
 The dynamic architectural routing achieved excellent outcomes across the portfolio, most notably in higher dimensions. 
-*   **Function 8 (8D):** Achieved **1st place** with a near-perfect score of `~0.997` by diagnosing a second-degree polynomial and using `L-BFGS-B` to extract the exact analytical maximum.
+*   **Function 8 (8D):** Achieved **1st place** with a perfect score of `1` by diagnosing a second-degree polynomial and using `L-BFGS-B` to extract the exact analytical maximum.
 *   **Function 6 (5D):** Secured **2nd place** using Support Vector Regression combined with Kriging.
 *   **Function 5 (4D):** Reached the **Top 5%** using polynomial trend estimators.
 
