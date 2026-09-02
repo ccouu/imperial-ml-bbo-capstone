@@ -35,7 +35,26 @@ The framework demonstrated that inductive bias and continuous kernel regularizat
 | **F7** | `6D` | `Support Vector Regression` + `Residual GP` | Competitive (Avg) |
 | **F8** | `8D` | `2nd-Degree Polynomial` + `L-BFGS-B Solver` | **1st Place (~0.997 Score)** |
 
----
+### 6. REPOSITORY MAP
+
+```text
+├── README.md                      ← you are here
+│
+├── data/                          🗄️ Optimization datasets
+│   ├── initial_data/              seed data provided at the start of the challenge
+│   └── weekly_data/               iterative weekly feedback and newly sampled points
+│
+└── src/                           ⚙️ Core pipeline and execution
+    │
+    ├── capstone.ipynb             ⭐ main execution flow, strategy logic, and weekly optimization loop
+    │
+    └── lib/                       🛠️ Custom utility modules
+        ├── data_prep.py           data loading, bounds enforcement, and log-transformations
+        ├── metrics.py             cross-validation MSE, UCB/EI acquisition, and scoring routines
+        ├── model.py               Ensemble Regression-Kriging, fallback gates, and L-BFGS-B solver
+        └── plotting.py            visualization tools for surrogate landscapes and convergence tracking
+```
+
 
 ### CONTACT DETAILS
 Hi, I'm Charles. I am a full-stack software engineer with over a decade of experience, actively transitioning into machine learning, data engineering, and MLOps. If you want to discuss Bayesian optimization, active learning, or ML infrastructure, feel free to reach out.
