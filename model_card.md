@@ -17,18 +17,18 @@ The system utilizes a two-tier **Ensemble Regression-Kriging (ERK)** architectur
 
 ## Performance
 
-Performance was evaluated against a synthetic benchmark suite of 8 hidden black-box functions (`F1` to `F8`) spanning 2D to 8D parameter spaces. The primary metric is the normalized leaderboard score (where `1.0` is the theoretical global maximum) achieved on a strictly limited query budget.
+Performance was evaluated against a synthetic benchmark suite of 8 hidden black-box functions (`F1` to `F8`) spanning 2D to 8D parameter spaces. The primary metric is the normalized leaderboard score achieved on a strictly limited query budget. Below are the absolute peak scores recorded across the 12-week evaluation period.
 
 | Function | Dimension | Winning Architecture | Benchmark Standing | Peak Score |
 | -------- | --------- | -------------------- | ------------------ | ---------- |
-| **F1**   | `2D`      | `XGBoost` + `Residual GP` | Competitive (Avg)  | N/A        |
-| **F2**   | `2D`      | `XGBoost` + `Residual GP` | Average (High Noise) | N/A        |
-| **F3**   | `3D`      | `SVR` + `Residual GP`     | **Top 15%**        | N/A        |
-| **F4**   | `4D`      | `Polynomial` + `Residual GP` | **Top 25%**        | N/A        |
-| **F5**   | `4D`      | `Polynomial` + `Residual GP` | **Top 5%**         | N/A        |
-| **F6**   | `5D`      | `SVR` + `Residual GP`     | **2nd Place**      | N/A        |
-| **F7**   | `6D`      | `SVR` + `Residual GP`     | Competitive (Avg)  | N/A        |
-| **F8**   | `8D`      | `2nd-Degree Polynomial` + `L-BFGS-B` | **1st Place** | `~0.997`   |
+| **F1**   | `2D`      | `XGBoost` + `Residual GP` | Competitive (Avg)  | `2.96e-08` |
+| **F2**   | `2D`      | `XGBoost` + `Residual GP` | Average (High Noise) | `0.5840`   |
+| **F3**   | `3D`      | `SVR` + `Residual GP`     | **Top 15%**        | `-0.0051`  |
+| **F4**   | `4D`      | `Polynomial` + `Residual GP` | **Top 25%**        | `0.6402`   |
+| **F5**   | `4D`      | `Polynomial` + `Residual GP` | **Top 5%**         | `8662.4825`|
+| **F6**   | `5D`      | `SVR` + `Residual GP`     | **2nd Place**      | `-0.0786`  |
+| **F7**   | `6D`      | `SVR` + `Residual GP`     | Competitive (Avg)  | `2.2608`   |
+| **F8**   | `8D`      | `2nd-Degree Polynomial` + `L-BFGS-B` | **1st Place** | `10.0`     |
 
 *Note: The architecture dominates in mid-to-high dimensional, sparse domains (F5, F6, F8) where capturing global parametric trends circumvents the curse of dimensionality.*
 
