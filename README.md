@@ -1,50 +1,44 @@
-## 📊 Dataset Composition
-### 1. Motivation
+## 📊 Ensemble Regression-Kriging for Black-Box Optimization
+### 1. NON-TECHNICAL EXPLANATION OF YOUR PROJECT
 
-This dataset tracks sequential candidate queries and outputs across eight unknown continuous synthetic objective functions (F1 to F8). Created by the student for the Imperial College London ML/AI capstone, it simulates expensive industrial optimization scenarios (e.g., hyperparameter tuning, lab synthesis) to evaluate surrogate modeling, Bayesian acquisition strategies, and LLM in-context optimization.
+Imagine trying to find the highest peak in a vast, foggy mountain range, but every step you take costs a fortune. This project builds an "intelligent digital prospector" to solve this problem. Instead of wandering randomly, the system creates a self-updating 3D elevation map of the terrain based on past steps. It mathematically calculates where the highest peaks are most likely hiding, systematically balancing whether to mine a proven gold vein or explore unmapped territory. In the real world, this exact approach is used to design drugs, tune AI models, and engineer aerospace components without wasting millions on trial-and-error testing.
 
-### 2. Composition
+### 2. DATA
 
-The dataset contains 13 sequential evaluations per function across 8 benchmark functions (114 total instances). Dimensionality varies by function, ranging from 2D to 8D continuous input vectors, with all input coordinates bounded strictly between 0.0 and 1.0. Outputs are continuous scalar values whose scale varies drastically across functions, spanning negative numbers, near-zero values in scientific notation, and positive values into the thousands. Spatial coverage exhibits sampling gaps in unmapped sub-regions due to late-stage exploitation around identified global peaks.
+The dataset consists of eight continuous, unobservable synthetic benchmark functions (**F1 to F8**) spanning **2D to 8D** parameter spaces. This data was provided as part of the Black-Box Optimization Capstone Challenge for the Imperial College London Professional Certificate in Machine Learning and Artificial Intelligence. The true mathematical formulations of the functions were hidden, and the system was strictly limited to a small budget of noisy evaluation queries to simulate highly expensive real-world industrial testing.
 
-### 3. Collection Process
+### 3. MODEL
 
-Data was gathered iteratively across 10 module rounds. Initial Round 0 provided baseline datasets varying from 10 to 40 data points across different functions to seed initial landscape mapping. Subsequent queries evolved using a competitive 5-Fold Cross-Validation surrogate tournament (SVR, XGBoost, Neural Networks, Linear Models) combined with a Gaussian Process trained on out-of-fold residual errors (Regression-Kriging). Decisions were guided by an Upper Confidence Bound (UCB) acquisition function with a decaying exploration parameter (kappa). Candidates were evaluated by the course benchmark engine to retrieve ground-truth target values.
+The project utilizes a **hybrid Ensemble Regression-Kriging with Upper Confidence Bound (ERK-UCB)** architecture.
 
-### 4. Preprocessing and Uses
+I chose this because standard Gaussian Processes (GPs) suffer severely from the curse of dimensionality; in sparse **6D to 8D** spaces, distance-based kernels become isotropic and uninformative. To solve this, my model runs a competitive **5-fold cross-validation** tournament across parametric global trend estimators (**Support Vector Regressors, XGBoost, and Polynomials**) to capture macro-level slopes. A Gaussian Process is then fitted strictly to the out-of-fold residual errors. To protect dense 2D manifolds from over-parameterized model bias, I engineered an automated fallback gate that reverts to a standard GP if the ensemble's cross-validation error exceeds a critical threshold (MSE > *0.5*).
 
-Some targets were transformed using a sign-preserving log-transform (y_trans = -sign(y) * log10(|y| + epsilon)) to prevent matrix inversion collapse on extreme scales, alongside MinMax feature scaling. Raw Cartesian coordinates were preserved to avoid introducing manual inductive bias. Intended for sparse-sample BO benchmarking and academic evaluation; inappropriate for high-dimensional (greater than 10D) or real-world physical deployment.
+### 4. HYPERPARAMETER OPTIMISATION
 
-### 5. Distribution and Maintenance
+Target Scaling: Raw targets spanned values from thousands down to extreme scientific notation (10^-160). I optimized the data space itself using a StandardScalar or yeo-johnson.
 
-Archived locally in Jupyter notebooks and submitted via the Imperial College London VLE portal under academic use terms. Maintained by the student author; underlying benchmark definitions remain proprietary to the course organizers.
+Gaussian Process Tuning: GP hyperparameters, specifically the Matérn-5/2 kernel lengthscales and the noise floor (WhiteKernel), were optimized using multi-start L-BFGS-B to maximize the log-marginal likelihood, preventing the optimizer from getting trapped in local minima.
 
+Exploration vs. Exploitation (kappa): The Upper Confidence Bound exploration factor (kappa) was scheduled dynamically. It was initialized high (**2.0 to 3.0**) in early rounds to map the hypercube boundaries and epistemic variance, and systematically decayed toward **0.0** in final rounds to force aggressive local peak exploitation.
+
+### 5. RESULTS
+
+The framework demonstrated that inductive bias and continuous kernel regularization dominate mid-to-high dimensional spaces.
+| Function | Dimension | Dominant Architecture | Benchmark Standing |
+| -------- | --------- | --------------------- | ------------------ |
+| **F1** | `2D` | `XGBoost` + `Residual GP` | Competitive (Avg) |
+| **F2** | `2D` | `XGBoost` + `Residual GP` | Average (High Noise) |
+| **F3** | `3D` | `Support Vector Regression` + `Residual GP` | **Top 15%** |
+| **F4** | `4D` | `Polynomial Trend` + `Residual GP` | **Top 25%** |
+| **F5** | `4D` | `Polynomial Trend` + `Residual GP` | **Top 5%** |
+| **F6** | `5D` | `Support Vector Regression` + `Residual GP` | **2nd Place** |
+| **F7** | `6D` | `Support Vector Regression` + `Residual GP` | Competitive (Avg) |
+| **F8** | `8D` | `2nd-Degree Polynomial` + `L-BFGS-B Solver` | **1st Place (~0.997 Score)** |
 
 ---
 
-## ⚡ Model Architecture
-### 1. Overview & Intended Use
+### CONTACT DETAILS
+Hi, I'm Charles. I am a full-stack software engineer with over a decade of experience, actively transitioning into machine learning, data engineering, and MLOps. If you want to discuss Bayesian optimization, active learning, or ML infrastructure, feel free to reach out.
 
-The Ensemble Regression-Kriging with Upper Confidence Bound (ERK-UCB) framework is designed for low-budget, continuous Black-Box Optimization (BBO) across 2D–8D search spaces bounded between 0.0 and 1.0. It is suitable for expensive physical or simulation tuning where objective evaluations are constrained. It should be avoided for high-dimensional spaces (greater than 10D), non-stationary landscapes with sharp discontinuities, or ultra-fast real-time control loops.
-
-### 2. Details & Round Evolution
-
-Across 10 rounds, the strategy evolved from initial space-filling exploration into automated, metric-driven optimization:
-
-Rounds 1–3 (Initialization & GP Baseline): Established spatial bounds using the initial 10–40 data points per function via stationary Gaussian Process (GP) regression.
-
-Rounds 4–8 (Surrogate Tournament & Regression-Kriging): Implemented competitive 5-Fold Cross-Validation across Linear Models, SVR, XGBoost, and Neural Networks to fit global trends. Residual errors were modeled using a GP to capture spatial epistemic uncertainty.
-
-Rounds 9–10 (Decayed Exploitation & Fine Tuning): Shifted acquisition focus from global exploration to aggressive local exploitation by decaying the UCB exploration factor (kappa = 0) on high-confidence functions.
-
-### 3. Performance
-
-Evaluated across functions F1–F8 using Out-of-Fold (OOF) Mean Squared Error (MSE), normalized fitness score (0.00 to 1.00), and regret. High-confidence functions (F3–F6, F8) achieved normalized scores up to 0.997 with MSE under 10% of target variance, enabling pure posterior mean exploitation. Complex functions like F1 required falling back to pure GP modeling to handle extreme spatial variance.
-
-### 4. Assumptions, Limitations & Ethics
-
-Assumptions: Input representations are optimal without feature engineering; target distributions can be stabilized using sign-preserving log-transformations.
-
-Limitations: High computational overhead during model tournaments; potential boundary clustering when epistemic uncertainty is extreme in sparse regions.
-
-Ethical Considerations & Decision Transparency: Transparency in model selection and residual tracking prevents "black-box inside a black-box" opacity, ensuring academic reproducibility and safe deployment in physical domain adaptation.
+GitHub: @ccouu
+LinkedIn: https://www.linkedin.com/in/o-u-chan-7b199b3b/
