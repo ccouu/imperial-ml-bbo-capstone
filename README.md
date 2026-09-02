@@ -33,7 +33,7 @@ The framework demonstrated that inductive bias and continuous kernel regularizat
 | **F5** | `4D` | `Polynomial Trend` + `Residual GP` | **Top 5%** |
 | **F6** | `5D` | `Support Vector Regression` + `Residual GP` | **2nd Place** |
 | **F7** | `6D` | `Support Vector Regression` + `Residual GP` | Competitive (Avg) |
-| **F8** | `8D` | `2nd-Degree Polynomial` + `L-BFGS-B Solver` | **1st Place (~0.997 Score)** |
+| **F8** | `8D` | `2nd-Degree Polynomial` + `L-BFGS-B Solver` | **1st Place ** |
 
 ### 6. REPOSITORY MAP
 
