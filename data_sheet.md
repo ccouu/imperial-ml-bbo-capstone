@@ -33,11 +33,14 @@ The primary approach utilized an **Ensemble Regression-Kriging** architecture pa
 Exploration was aggressively forced in early rounds by setting the UCB exploration factor (`kappa`) between `2.0` and `3.0`. As diagnostics confirmed structural legibility in specific functions (like the polynomial structure in `F5` and `F8`), `kappa` was decayed to `0.0`. The strategy then executed a critical pivot for structured landscapes: abandoning stochastic Bayesian sampling entirely in favor of **bounded L-BFGS-B deterministic gradient optimization** calculated directly on the fitted global trend pipeline.
 
 ## Data Handling and Preprocessing
-To strictly enforce parameter boundaries during analytical solving, all inputs were processed through a `MinMaxScaler` to maintain `[0, 1]` constraints. The surrogate models utilized a two-tier structure:
-*   **Base Regressor:** Determined via a 5-fold cross-validation tournament.
+The surrogate models utilized a two-tier structure:
+*   **Base Regressor:** Determined via a `5-fold cross-validation` tournament.
 *   **Residual Model:** A standard `Gaussian Process` fitted strictly to the out-of-fold errors.
 
-Target outputs were stabilized using a **sign-preserving logarithmic transformation** to prevent covariance matrix conditioning failures, which was especially critical for functions spanning massive orders of magnitude. 
+To ensure numerical stability and prevent covariance matrix conditioning failures, scaling and transformations were specifically tailored to the characteristics of each function rather than applying a universal approach:
+*   **Function 1:** Utilized a **Yeo-Johnson transformation** to stabilize variance across extreme distributions.
+*   **Function 2:** Remained **untouched** (no transformation applied), as the target outputs naturally fell within a stable `[-1, 0]` range.
+*   **Functions 3–8:** Processed using a **StandardScaler** (standardizing data to a mean of zero and unit variance) instead of a `MinMaxScaler`.
 
 ## Weekly Iteration and Learning
 New data points rapidly confirmed that mid-to-high dimensional spaces were better treated as structured geometric shapes rather than chaotic black boxes. Early **boundary probes** (evaluating the extreme edges and corners of the hypercube) proved to be the most informative queries, as they quickly established global gradients and prevented monotonic assumptions drawn from narrow sub-regions.
