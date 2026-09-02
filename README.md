@@ -61,3 +61,14 @@ Hi, I'm Charles. I am a full-stack software engineer with over a decade of exper
 
 GitHub: @ccouu
 LinkedIn: https://www.linkedin.com/in/o-u-chan-7b199b3b/
+
+## References
+
+*   **Srinivas, N., Krause, A., Kakade, S. M., & Seeger, M. (2010).** *Gaussian Process Optimization in the Bandit Setting: No Regret and Experimental Design.* 
+    *   **Relevance:** Provides the mathematical proof and justification for the dynamic Upper Confidence Bound (UCB) exploration-exploitation scheduling used in this project.
+*   **Rasmussen, C. E., & Williams, C. K. I. (2006).** *Gaussian Processes for Machine Learning* (Chapter 2.7: Incorporating Explicit Basis Functions).
+    *   **Relevance:** The theoretical foundation for the project's core architecture, detailing how to combine parametric global trend estimators (explicit basis functions) with residual Gaussian Processes.
+*   **Snoek, J., Larochelle, H., & Adams, R. P. (2012).** *Practical Bayesian Optimization of Machine Learning Algorithms.*
+    *   **Relevance:** Contextualizes Functions 7 and 8 by demonstrating how Bayesian Optimization is directly applied to high-dimensional hyperparameter tuning in real-world ML systems.
+*   **Shahriari, B., Swersky, K., Wang, Z., Adams, R. P., & De Freitas, N. (2016).** *Taking the Human Out of the Loop: A Review of Bayesian Optimization.*
+    *   **Relevance:** Explains the challenges of the "curse of dimensionality" in standard Bayesian Optimization, validating the necessity of the hybrid surrogate approaches used for the 4D–8D functions.
